@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Database1Model.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="SessionSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="testerInitials" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="stepHeight" Type="int" Nullable="false" />
+          <Property Name="SessionDate" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestedSet">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="name" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="age" Type="int" Nullable="false" />
+          <Property Name="remarks" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="hearthRate" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="readynessToEx" Type="bit" Nullable="false" />
+          <Property Name="contraIndication" Type="bit" Nullable="false" />
+          <Property Name="lifestyleActlvl" Type="bit" Nullable="false" />
+          <Property Name="SessionId" Type="int" Nullable="false" />
+          <Property Name="sex" Type="bit" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_SessionTested">
+          <End Role="SessionSet" Type="Self.SessionSet" Multiplicity="1" />
+          <End Role="TestedSet" Type="Self.TestedSet" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SessionSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestedSet">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Database1ModelStoreContainer">
+          <EntitySet Name="SessionSet" EntityType="Self.SessionSet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TestedSet" EntityType="Self.TestedSet" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_SessionTested" Association="Self.FK_SessionTested">
+            <End Role="SessionSet" EntitySet="SessionSet" />
+            <End Role="TestedSet" EntitySet="TestedSet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Database1Model" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Session">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="testerInitials" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="stepHeight" Type="Int32" Nullable="false" />
+          <Property Name="SessionDate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="TestedSet" Relationship="Self.FK_SessionTested" FromRole="SessionSet" ToRole="TestedSet" />
+        </EntityType>
+        <EntityType Name="Tested">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="age" Type="Int32" Nullable="false" />
+          <Property Name="remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="hearthRate" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="readynessToEx" Type="Boolean" Nullable="false" />
+          <Property Name="contraIndication" Type="Boolean" Nullable="false" />
+          <Property Name="lifestyleActlvl" Type="Boolean" Nullable="false" />
+          <Property Name="SessionId" Type="Int32" Nullable="false" />
+          <Property Name="sex" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="SessionSet" Relationship="Self.FK_SessionTested" FromRole="TestedSet" ToRole="SessionSet" />
+        </EntityType>
+        <Association Name="FK_SessionTested">
+          <End Role="SessionSet" Type="Database1Model.Session" Multiplicity="1" />
+          <End Role="TestedSet" Type="Database1Model.Tested" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SessionSet">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestedSet">
+              <PropertyRef Name="SessionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DbEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="SessionSet" EntityType="Database1Model.Session" />
+          <EntitySet Name="TestedSet" EntityType="Database1Model.Tested" />
+          <AssociationSet Name="FK_SessionTested" Association="Self.FK_SessionTested">
+            <End Role="SessionSet" EntitySet="SessionSet" />
+            <End Role="TestedSet" EntitySet="TestedSet" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Database1ModelStoreContainer" CdmEntityContainer="DbEntities">
+          <EntitySetMapping Name="SessionSet">
+            <EntityTypeMapping TypeName="Database1Model.Session">
+              <MappingFragment StoreEntitySet="SessionSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="testerInitials" ColumnName="testerInitials" />
+                <ScalarProperty Name="stepHeight" ColumnName="stepHeight" />
+                <ScalarProperty Name="SessionDate" ColumnName="SessionDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestedSet">
+            <EntityTypeMapping TypeName="Database1Model.Tested">
+              <MappingFragment StoreEntitySet="TestedSet">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="age" ColumnName="age" />
+                <ScalarProperty Name="remarks" ColumnName="remarks" />
+                <ScalarProperty Name="hearthRate" ColumnName="hearthRate" />
+                <ScalarProperty Name="readynessToEx" ColumnName="readynessToEx" />
+                <ScalarProperty Name="contraIndication" ColumnName="contraIndication" />
+                <ScalarProperty Name="lifestyleActlvl" ColumnName="lifestyleActlvl" />
+                <ScalarProperty Name="SessionId" ColumnName="SessionId" />
+                <ScalarProperty Name="sex" ColumnName="sex" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
